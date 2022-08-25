@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -39,9 +40,21 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void _handleRawKeyEvent(RawKeyEvent event) {
-    debugPrint(event.toString());
-    debugPrint(event.character);
     debugPrint(event.data.toString());
+    int scanCode;
+    if (event.data is RawKeyEventDataMacOs) {
+      RawKeyEventDataMacOs newData = event.data as RawKeyEventDataMacOs;
+      scanCode = newData.keyCode;
+    } else if (event.data is RawKeyEventDataWindows) {
+      RawKeyEventDataWindows newData = event.data as RawKeyEventDataWindows;
+      scanCode = newData.scanCode;
+    } else if (event.data is RawKeyEventDataLinux) {
+      RawKeyEventDataLinux newData = event.data as RawKeyEventDataLinux;
+      scanCode = newData.scanCode;
+    } else {
+      scanCode = -1;
+    }
+    debugPrint(scanCode.toString() ?? "");
     setState(() {
       _message =
           'KeyName: ${event.logicalKey.debugName}  KeyId: ${event.logicalKey.keyId}';
