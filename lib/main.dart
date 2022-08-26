@@ -54,6 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       scanCode = -1;
     }
+    debugPrint(event.character);
     debugPrint(scanCode.toString() ?? "");
     setState(() {
       _message =
