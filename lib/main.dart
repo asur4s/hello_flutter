@@ -39,26 +39,37 @@ class _MyHomePageState extends State<MyHomePage> {
     super.dispose();
   }
 
-  void _handleRawKeyEvent(RawKeyEvent event) {
-    debugPrint(event.data.toString());
+  void _handleRawKeyEvent(RawKeyEvent e) {
+    debugPrint(e.data.toString());
     int scanCode;
-    if (event.data is RawKeyEventDataMacOs) {
-      RawKeyEventDataMacOs newData = event.data as RawKeyEventDataMacOs;
+    int keyCode;
+    bool down;
+
+    if (e.data is RawKeyEventDataMacOs) {
+      RawKeyEventDataMacOs newData = e.data as RawKeyEventDataMacOs;
       scanCode = newData.keyCode;
-    } else if (event.data is RawKeyEventDataWindows) {
-      RawKeyEventDataWindows newData = event.data as RawKeyEventDataWindows;
+      keyCode = newData.keyCode;
+    } else if (e.data is RawKeyEventDataWindows) {
+      RawKeyEventDataWindows newData = e.data as RawKeyEventDataWindows;
       scanCode = newData.scanCode;
-    } else if (event.data is RawKeyEventDataLinux) {
-      RawKeyEventDataLinux newData = event.data as RawKeyEventDataLinux;
+      keyCode = newData.keyCode;
+    } else if (e.data is RawKeyEventDataLinux) {
+      RawKeyEventDataLinux newData = e.data as RawKeyEventDataLinux;
       scanCode = newData.scanCode;
-    } else {
+      keyCode = newData.keyCode;
+    } else if (e.data is RawKeyEventDataAndroid){
+      RawKeyEventDataAndroid newData = e.data as RawKeyEventDataAndroid;
+      scanCode = newData.scanCode + 8;
+      keyCode = newData.keyCode;
+    }else {
       scanCode = -1;
+      keyCode = -1;
     }
-    debugPrint(event.character);
-    debugPrint(scanCode.toString() ?? "");
+
+    debugPrint(scanCode.toString() + " " + keyCode.toString());
     setState(() {
       _message =
-          'KeyName: ${event.logicalKey.debugName}  KeyId: ${event.logicalKey.keyId}';
+          'KeyName: ${e.logicalKey.debugName}  KeyId: ${e.logicalKey.keyId}';
     });
   }
 
